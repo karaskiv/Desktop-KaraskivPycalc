@@ -80,12 +80,19 @@ class Calc():
 		#self.display(0)		
 		#self.input_value=True
 
+	#def cancel(self):
+		#numLen = len(txtDisplay.get())
+		#txtDisplay.delete(numLen - 1, END)
+		#if numLen == 1:
+			#txtDisplay.insert(0, "0")
+		#self.input_value = True
+	
 	def cancel(self):
-		numLen = len(txtDisplay.get())
-		txtDisplay.delete(numLen - 1, END)
-		if numLen == 1:
-			txtDisplay.insert(0, "0")
-		self.input_value = True
+		self.current = self.current[:-1]
+		if self.current == "":
+			self.input_value = True
+			self.current = "0"
+		self.display(self.current)
 
 
 	def all_Clear_Entry(self):

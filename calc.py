@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from tkinter import*
 import math
 import parser

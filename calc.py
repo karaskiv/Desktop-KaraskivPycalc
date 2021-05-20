@@ -13,6 +13,75 @@ root.geometry("388x505")
 calc = Frame(root)
 calc.grid()
 
+class Calc():
+	def __init__(self):
+		self.total = 0
+		self.current = ""
+		self.input_value = True
+		self.check_sum = False
+		self.op = ""
+		self.result = False
+
+	def numberEnter(self, num):
+		self.result = False
+		firstnum = txtDisplay.get()
+		secondnum = str(num)
+		if self.input_value:
+			self.current = secondnum
+			self.input_value = False
+		else:
+			if secondnum == '.':
+				if secondnum in firstnum:
+					return
+			self.current = firstnum + secondnum
+		self.display(self.current)
+
+	def sum_of_total (self):
+		self.result = True
+		self.current = float(self.current)
+		if self.check_sum == True:
+			self.valid_function()
+		else:
+			self.total = float(txtDisplay.get())
+
+	def display(self, value):
+		txtDisplay.delete(0, END)
+		txtDisplay.insert(0, value)
+
+	def valid_function(self):
+		if self.op == "add":
+			self.total += self.current
+		if self.op == "sub":
+			self.total -= self.current
+		if self.op == "multi":
+			self.total *= self.current
+		if self.op == "divide":
+			self.total /= self.current
+		if self.op == "mod":
+			self.total %= self.current
+		self.input_value = True
+		self.check_sum = False
+		self.display(self.total)
+
+	def operation(self, op):
+		self.current = float(self.current)
+		if self.check_sum:
+			self.valid_function()
+		elif not self.result:
+			self.total = self.current
+			self.input_value = True
+		self.check_sum = True
+		self.op = op
+		self.result = False	
+
+	def pi(self):
+		self.result = False
+		self.current = math.pi
+		self.display(self.current)
+
+added_value = Calc()
+
+
 #=======Color palette========
 hex1 = "#355C7D"
 hex2 = "#725A7A"
@@ -39,7 +108,7 @@ for j in range (2, 5):
 	for k in range (3):
 		btn.append(Button(calc, width = 4, height = 2, font = ('arial', 20, 'bold'),fg = "snow", bg = hex1, bd = 4, text = numberpad[i]))
 		btn[i].grid(row = j, column = k, pady = 1)
-
+		btn[i]["command"] = lambda x = numberpad [i]: added_value.numberEnter(x)
 		i += 1
 
 #==========================================================
@@ -49,17 +118,21 @@ btnAllClear = Button(calc, text = "AC", width = 4, height = 2, font = ('arial', 
 
 btnSq = Button(calc, text = "√", width = 4, height = 2, font = ('arial', 20, 'bold'), bd = 4, fg = "snow", bg = hex5).grid(row = 1, column = 2, pady = 1)
 
-btnAdd = Button(calc, text = "+", width = 4, height = 2, font = ('arial', 20, 'bold'), bd = 4, fg = "snow", bg = hex5).grid(row = 1, column = 3, pady = 1)
+btnAdd = Button(calc, text = "+", width = 4, height = 2, font = ('arial', 20, 'bold'), bd = 4, fg = "snow", bg = hex5, command =  lambda: added_value.operation(add)).grid(row = 1, column = 3, pady = 1)
 
-btnSub = Button(calc, text = "-", width = 4, height = 2, font = ('arial', 20, 'bold'), bd = 4, fg = "snow", bg = hex5).grid(row = 2, column = 3, pady = 1)
+btnSub = Button(calc, text = "-", width = 4, height = 2, font = ('arial', 20, 'bold'), bd = 4, fg = "snow", bg = hex5, command =  lambda: added_value.operation(sub)).grid(row = 2, column = 3, pady = 1)
 
-btnMult = Button(calc, text = "×", width = 4, height = 2, font = ('arial', 20, 'bold'), bd = 4, fg = "snow", bg = hex5).grid(row = 3, column = 3, pady = 1)
+btnMult = Button(calc, text = "×", width = 4, height = 2, font = ('arial', 20, 'bold'), bd = 4, fg = "snow", bg = hex5, command =  lambda: added_value.operation(multi)).grid(row = 3, column = 3, pady = 1)
 
-btnDiv = Button(calc, text = "÷", width = 4, height = 2, font = ('arial', 20, 'bold'), bd = 4, fg = "snow", bg = hex5).grid(row = 4, column = 3, pady = 1)
+btnDiv = Button(calc, text = "÷", width = 4, height = 2, font = ('arial', 20, 'bold'), bd = 4, fg = "snow", bg = hex5, command =  lambda: added_value.operation(div)).grid(row = 4, column = 3, pady = 1)
 
-btnZero = Button(calc, text = "0", width = 4, height = 2, font = ('arial', 20, 'bold'), bd = 4, fg = "snow", bg = hex1).grid(row = 5, column = 0, pady = 1)
+btnZero = Button(calc, text = "0", width = 4, height = 2, font = ('arial', 20, 'bold'), bd = 4, fg = "snow", bg = hex1, command =  lambda: added_value.numberEnter(0)).grid(row = 5, column = 0, pady = 1)
 
-btnDot = Button(calc, text = ".", width = 4, height = 2, font = ('arial', 20, 'bold'), bd = 4, fg = "snow", bg = hex5).grid(row = 5, column = 1, pady = 1)
+
+
+
+
+btnDot = Button(calc, text = ".", width = 4, height = 2, font = ('arial', 20, 'bold'), bd = 4, fg = "snow", bg = hex5, command =  lambda: added_value.numberEnter(".")).grid(row = 5, column = 1, pady = 1)
 
 btnPM = Button(calc, text = chr(177), width = 4, height = 2, font = ('arial', 20, 'bold'), bd = 4, fg = "snow", bg = hex5).grid(row = 5, column = 2, pady = 1)
 
@@ -67,7 +140,7 @@ btnEquals = Button(calc, text = "=", width = 4, height = 2, font = ('arial', 20,
 
 
 #==========================================================Scientific Calculator===============================================================================
-btnPi = Button(calc, text = "π", width = 4, height = 2, font = ('arial', 20, 'bold'), bd = 4, fg = "snow", bg = hex5).grid(row = 1, column = 4, pady = 1)
+btnPi = Button(calc, text = "π", width = 4, height = 2, font = ('arial', 20, 'bold'), bd = 4, fg = "snow", bg = hex5, command = added_value.pi).grid(row = 1, column = 4, pady = 1)
 btncos = Button(calc, text = "cos", width = 4, height = 2, font = ('arial', 20, 'bold'), bd = 4, fg = "snow", bg = hex5).grid(row = 1, column = 5, pady = 1)
 btntan = Button(calc, text = "tan", width = 4, height = 2, font = ('arial', 20, 'bold'), bd = 4, fg = "snow", bg = hex5).grid(row = 1, column = 6, pady = 1)
 btnsin = Button(calc, text = "sin", width = 4, height = 2, font = ('arial', 20, 'bold'), bd = 4, fg = "snow", bg = hex5).grid(row = 1, column = 7, pady = 1)
@@ -91,6 +164,10 @@ btnlog10 = Button(calc, text = "log10", width = 4, height = 2, font = ('arial', 
 btnlog1p = Button(calc, text = "log1p", width = 4, height = 2, font = ('arial', 20, 'bold'), bd = 4, fg = "snow", bg = hex5).grid(row = 5, column = 5, pady = 1)
 btnexpm1 = Button(calc, text = "expm1", width = 6, height = 3, font = ('arial', 13, 'bold'), bd = 4, fg = "snow", bg = hex5).grid(row = 5, column = 6, pady = 1)
 btnlgamma = Button(calc, text = "lgamma", width = 6, height = 3, font = ('arial', 13, 'bold'), bd = 4, fg = "snow", bg = hex5).grid(row = 5, column = 7, pady = 1)
+
+lblDisplay = Label(calc, text = "Karaskiv Pycalc", font = ('arial', 20, 'bold'), justify = CENTER)
+lblDisplay.grid(row = 0, column = 4, columnspan = 4)
+
 #==========================================================Scientific Calculator=======================================================================================
 
 #=====================Menu and function====================
